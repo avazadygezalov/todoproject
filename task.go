@@ -30,7 +30,7 @@ func addTask(task map[string]toDoList) {
 
 func deleteTask(task map[string]toDoList) {
 	scan := bufio.NewScanner(os.Stdin)
-	pp.Println("Введите название задачи котрую хотите удалить")
+	pp.Println("Введите название задачи которую хотите удалить")
 	scan.Scan()
 	delete(task, scan.Text())
 }

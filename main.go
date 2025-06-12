@@ -25,7 +25,7 @@ func main() {
 			addTask(list)
 		case "удалить задачу":
 			deleteTask(list)
-		case "стоhiп":
+		case "стоп":
 			return
 		}
 		pp.Println(list)
