@@ -43,8 +43,10 @@ func DeleteTask() {
 	scan := bufio.NewScanner(os.Stdin)
 	pp.Println("Введите название задачи которую хотите удалить")
 	scan.Scan()
-	action.ActT(scan.Text())
-	delete(list, scan.Text())
+	if _, ok := list[scan.Text()]; ok {
+		action.ActT(scan.Text())
+		delete(list, scan.Text())
+	}
 }
 
 func GetTask() {
