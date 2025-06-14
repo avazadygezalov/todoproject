@@ -2,32 +2,54 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"github.com/k0kubun/pp/v3"
 	"os"
+	"todoproject/action"
+	"todoproject/task"
 )
 
-type toDoList struct {
-	description string
-	dataCreate  string
-	dataDone    string
-	status      bool
-}
-
-var list = make(map[string]toDoList)
-
 func main() {
+	comd()
 	for {
-		pp.Println("Введите команду")
+		fmt.Println("Введите команду")
 		cmd := bufio.NewScanner(os.Stdin)
 		cmd.Scan()
 		switch cmd.Text() {
 		case "добавить задачу":
-			addTask(list)
+			task.AddTask()
+			action.ActT(cmd.Text())
 		case "удалить задачу":
-			deleteTask(list)
+			task.DeleteTask()
+			action.ActT(cmd.Text())
 		case "стоп":
 			return
+		case "сменить статус":
+			task.ChangeStatus()
+			action.ActT(cmd.Text())
+		case "список":
+			task.GetTask()
+			action.ActT(cmd.Text())
+		case "помощь":
+			comd()
+			action.ActT(cmd.Text())
+		case "события":
+			action.GetAction()
+			action.ActT(cmd.Text())
+		default:
+			comd()
+			action.ActF(cmd.Text(), "Такой команды нет")
+			pp.Println("такой команды нет")
 		}
-		pp.Println(list)
 	}
+}
+
+func comd() {
+	pp.Println("список команд:")
+	pp.Println("добавить задачу")
+	pp.Println("удалить задачу")
+	pp.Println("сменить статус")
+	pp.Println("список")
+	pp.Println("события")
+	pp.Println("помощь")
 }
