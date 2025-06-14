@@ -22,21 +22,25 @@ func AddTask() {
 	scan := bufio.NewScanner(os.Stdin)
 	pp.Println("Введите название задачи которую хотите добавить (1 слово) а дальше описание")
 	scan.Scan()
-	action.ActT(scan.Text())
-	text := strings.Fields(scan.Text())
-	var descr string
-	for i := 1; i < len(text); i++ {
-		if i != len(text)-1 {
-			descr = descr + text[i] + " "
-		} else {
-			descr = descr + text[i]
+	if scan.Text() != "" {
+		action.ActT(scan.Text())
+		text := strings.Fields(scan.Text())
+		var descr string
+		for i := 1; i < len(text); i++ {
+			if i != len(text)-1 {
+				descr = descr + text[i] + " "
+			} else {
+				descr = descr + text[i]
+			}
 		}
+		list[text[0]] = toDoList{
+			description: descr,
+			dataCreate:  time.Now().Format("2006-01-02 15:04:05"),
+		}
+	} else {
+		pp.Println("Вы ввели пустую строку")
+		action.ActF(scan.Text(), "Вы ввели пустую строку")
 	}
-	list[text[0]] = toDoList{
-		description: descr,
-		dataCreate:  time.Now().Format("2006-01-02 15:04:05"),
-	}
-	return
 }
 
 func DeleteTask() {
@@ -46,6 +50,9 @@ func DeleteTask() {
 	if _, ok := list[scan.Text()]; ok {
 		action.ActT(scan.Text())
 		delete(list, scan.Text())
+	} else {
+		pp.Println("Такой задачи нет")
+		action.ActF(scan.Text(), "Такой задачи нет")
 	}
 }
 
@@ -57,22 +64,27 @@ func ChangeStatus() {
 	scan := bufio.NewScanner(os.Stdin)
 	pp.Println("Введите название задачи у которой хотите изменить статус")
 	scan.Scan()
-	action.ActT(scan.Text())
-	taskName := scan.Text()
-	pp.Println("Задача выполнена? да нет")
-	scan.Scan()
-	action.ActT(scan.Text())
-	switch scan.Text() {
-	case "да":
-		list[taskName] = toDoList{
-			status: true,
+	if _, ok := list[scan.Text()]; ok {
+		action.ActT(scan.Text())
+		taskName := scan.Text()
+		pp.Println("Задача выполнена? да нет")
+		scan.Scan()
+		action.ActT(scan.Text())
+		switch scan.Text() {
+		case "да":
+			list[taskName] = toDoList{
+				status: true,
+			}
+		case "нет":
+			list[taskName] = toDoList{
+				status: false,
+			}
+		default:
+			pp.Println("Вы ввели не то")
+			action.ActF(taskName, "Вы ввели не то в качестве ответа на вопрос Задача выполнена?")
 		}
-	case "нет":
-		list[taskName] = toDoList{
-			status: false,
-		}
-	default:
-		pp.Println("Вы ввели не то")
-		action.ActF(taskName, "Вы ввели не то в качестве ответа на вопрос Задача выполнена?")
+	} else {
+		pp.Println("Такой задачи нет")
+		action.ActF(scan.Text(), "Такой задачи нет")
 	}
 }
